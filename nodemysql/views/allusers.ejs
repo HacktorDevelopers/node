@@ -1,0 +1,20 @@
+<% include partials/header %>
+<div class="container">
+<%= "Number of users is " + users.length %>
+<table class="table">
+	<h1>List Of Users</h1>
+	<tr>
+		<th>id</th>
+		<th>Name</th>
+		<th>Action</th>
+	</tr>
+	<% for(var i = 0; i < users.length; i++){ %>
+		<tr>
+			<td><%= users[i].id %></td>
+			<td><%= users[i].name %></td>
+			<td><a class="btn btn-danger">Delete</a></td>
+		</tr>
+	<% } %>
+</table>
+</div>
+<% include partials/footer %>

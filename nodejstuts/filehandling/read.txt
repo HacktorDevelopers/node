@@ -1,0 +1,217 @@
+ whitef0x0 / node-email-verification
+ 
+Code Issues 17 Pull requests 1 Projects 0 Pulse
+Jump to bottom  Closed
+[ERR_INVALID_CALLBACK]: Callback must be a function #78
+@daureslaurent
+daureslaurent opened this issue 12 months ago • edited 12 months ago
+events.js:136
+throw er; // Unhandled 'error' event
+^
+
+TypeError [ERR_INVALID_CALLBACK]: Callback must be a function
+at Object.randomBytes (internal/crypto/random.js:44:11)
+at Object.options.source (/home/lolo/izipadel/node_modules/rand-token/index.js:60:25)
+at Object.generate (/home/lolo/izipadel/node_modules/rand-token/index.js:95:29)
+at /home/lolo/izipadel/node_modules/email-verification/index.js:286:58
+at model.Query. (/home/lolo/izipadel/node_modules/mongoose/lib/model.js:4020:16)
+at /home/lolo/izipadel/node_modules/kareem/index.js:273:21
+at /home/lolo/izipadel/node_modules/kareem/index.js:131:16
+at process._tickCallback (internal/process/next_tick.js:150:11)
+
+daureslaurent modified this issue  12 months ago
+@hizaku2000
+hizaku2000 
+commented 11 months ago
+I have the same issue with node v9.2. The error doesn't occur when using node v8.9.4. possibly the version of rand-token is not compatible with node v9
+
+ 👍 2
+@engMaher
+engMaher 
+commented 10 months ago
+by drilling down to node_modules/rand-token/index.js:60:25 , after interchanging the value given to the switch case "default and crypto" , it works fine , but does this affect the predictability of the random tokens?
+
+@joshbenz
+joshbenz commented 7 months ago • edited 6 months ago
+yeah i'm having this problem right now. rand-token says they fixed it but you have to update it.
+sehrope/node-rand-token#9
+probably to 0.4.0 but this email-verification is using ^0.2.1
+
+Edit:
+So i manually went into the node_modules and changed rand-token version to 0.4.0 and npm install, and everything works now. I'm using node 10 so I would imagine that it would work with 9 as well
+
+OS: Arch Linux 4.16.9-1
+Node version : 10.1.0
+
+ 👍 1
+@SeunghunSunmoonLee
+SeunghunSunmoonLee 
+commented 7 months ago
+maintainers, please update rand-token to 0.4 in the package.json !
+
+@chiragmittal19
+chiragmittal19 commented 6 months ago • edited 6 months ago
+OS: Windows 10 x64
+node version: 10.2.1
+rand-token version: 0.4.0
+
+Still getting the same error! @joshbenz @SeunghunSunmoonLee What should I do?
+
+TypeError [ERR_INVALID_CALLBACK]: Callback must be a function
+at maybeCallback (fs.js:157:9)
+at Object.fs.writeFile (fs.js:1276:14)
+at D:\Projects\learning_app\node-utils\json_file_generation.js:130:8
+at Query. (D:\Projects\learning_app\node-utils\query.js:25:16)
+at Query.handleReadyForQuery (D:\Projects\learning_app\node_modules\pg\lib\query.js:126:10)
+at Connection. (D:\Projects\learning_app\node_modules\pg\lib\client.js:163:19)
+at Connection.emit (events.js:182:13)
+at TLSSocket. (D:\Projects\learning_app\node_modules\pg\lib\connection.js:123:12)
+at TLSSocket.emit (events.js:182:13)
+at addChunk (_stream_readable.js:279:12)
+
+@riyazpanarwala
+riyazpanarwala 
+commented 6 months ago
+OS: Windows 7 x64
+node version : 9.2.0
+rand-token : 0.4.0
+
+events.js:136
+throw er; // Unhandled 'error' event
+^
+
+TypeError [ERR_INVALID_CALLBACK]: Callback must be a function
+at Object.randomBytes (internal/crypto/random.js:44:11)
+at Object.options.source (E:\wamp\www\node-email-verification-master\node-em
+ail-verification-master\examples\express\node_modules\email-verification\node_mo
+dules\rand-token\index.js:60:25)
+at Object.generate (E:\wamp\www\node-email-verification-master\node-email-ve
+rification-master\examples\express\node_modules\email-verification\node_modules
+rand-token\index.js:95:29)
+at E:\wamp\www\node-email-verification-master\node-email-verification-master
+\examples\express\node_modules\email-verification\index.js:286:58
+at E:\wamp\www\node-email-verification-master\node-email-verification-master
+\examples\express\node_modules\mongoose\lib\model.js:4422:16
+at model.Query.Query._completeOne (E:\wamp\www\node-email-verification-maste
+r\node-email-verification-master\examples\express\node_modules\mongoose\lib\quer
+y.js:1581:12)
+at Immediate.Query.base.findOne.call (E:\wamp\www\node-email-verification-ma
+ster\node-email-verification-master\examples\express\node_modules\mongoose\lib\q
+uery.js:1641:10)
+at Immediate. (E:\wamp\www\node-email-verification-master\node-em
+ail-verification-master\examples\express\node_modules\mquery\lib\utils.js:119:16
+)
+at runCallback (timers.js:800:20)
+at tryOnImmediate (timers.js:762:5)
+at processImmediate [as _immediateCallback] (timers.js:733:5)
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! email-verification1@0.0.1 start: node server.js
+npm ERR! Exit status 1
+npm ERR!
+npm ERR! Failed at the email-verification1@0.0.1 start script.
+npm ERR! This is probably not a problem with npm. There is likely additional log
+ging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR! C:\Users\admin\AppData\Roaming\npm-cache_logs\2018-07-03T12_23_09_
+187Z-debug.log
+
+@joshbenz
+joshbenz 
+commented 6 months ago
+@chiragmittal19 You are actually getting a different error that has to do with " Object.fs.writeFile" instead of "Object.randomBytes". I suspect your error isn't related to this package. Are you using fs.writeFile anywhere? It requires a callback as per the documentation, https://nodejs.org/api/fs.html#fs_fs_writefile_file_data_options_callback
+
+joshbenz referenced this issue from commit f67780a  6 months ago
+joshbenz referenced this issue from another pull request
+#84 update rand-token to close #78
+whitef0x0 closed this issue in f67780a  6 months ago
+whitef0x0 referenced this issue from commit b5d6a5b  6 months ago
+@riyazpanarwala
+riyazpanarwala 
+commented 6 months ago
+@joshbenz i got an error related "Object.randomBytes".
+
+@riyazpanarwala
+riyazpanarwala 
+commented 6 months ago
+The above error is resolved when rand token package gets updated to 0.4.0.
+But i got below error while sending email using nev.sendVerificationEmail
+
+{ Error: unable to verify the first certificate
+at TLSSocket.onConnectSecure (_tls_wrap.js:1036:34)
+at TLSSocket.emit (events.js:159:13)
+at TLSSocket._finishInit (_tls_wrap.js:637:8) code: 'ECONNECTION', command:
+'CONN' }
+
+@riyazpanarwala
+riyazpanarwala 
+commented 6 months ago
+To solve above error i have added below parameters in nev transportOptions config.
+tls: {
+rejectUnauthorized: false
+}
+
+@riyazpanarwala
+riyazpanarwala 
+commented 6 months ago
+Got this error while confirming user. This happens when tring to store temporary users into real users.
+
+{ ValidationError: real_users validation failed
+at ValidationError.inspect (E:\wamp\www\node-email-verification-master\node-
+email-verification-master\examples\express\node_modules\mongoose\lib\error\valid
+ation.js:56:24)
+at formatValue (util.js:438:38)
+at inspect (util.js:328:10)
+at format (util.js:195:12)
+at Console.log (console.js:131:21)
+at E:\wamp\www\node-email-verification-master\node-email-verification-master
+\examples\express\node_modules\email-verification\index.js:419:19
+at E:\wamp\www\node-email-verification-master\node-email-verification-master
+\examples\express\node_modules\mongoose\lib\model.js:4422:16
+at $__save.error (E:\wamp\www\node-email-verification-master\node-email-veri
+fication-master\examples\express\node_modules\mongoose\lib\model.js:379:16)
+at E:\wamp\www\node-email-verification-master\node-email-verification-master
+\examples\express\node_modules\kareem\index.js:246:48
+at next (E:\wamp\www\node-email-verification-master\node-email-verification-
+master\examples\express\node_modules\kareem\index.js:167:27)
+at Kareem.execPost (E:\wamp\www\node-email-verification-master\node-email-ve
+rification-master\examples\express\node_modules\kareem\index.js:217:3)
+at _handleWrapError (E:\wamp\www\node-email-verification-master\node-email-v
+erification-master\examples\express\node_modules\kareem\index.js:245:21)
+at E:\wamp\www\node-email-verification-master\node-email-verification-master
+\examples\express\node_modules\kareem\index.js:272:14
+at _next (E:\wamp\www\node-email-verification-master\node-email-verification
+-master\examples\express\node_modules\kareem\index.js:94:14)
+at process.nextTick (E:\wamp\www\node-email-verification-master\node-email-v
+erification-master\examples\express\node_modules\kareem\index.js:452:38)
+at _combinedTickCallback (internal/process/next_tick.js:131:7)
+errors: {},
+_message: 'real_users validation failed',
+name: 'ValidationError' }
+
+@joshbenz
+joshbenz 
+commented 6 months ago
+@riyazpanarwala ah I see. I'm not really sure. I'm not a maintainer or anything, I just happened to know how to fix the bug for this issue, so I did lol. Your issue doesn't seem to be related to this bug and the issue is closed, so you might wanna open a new issue with your new problem.
+
+@iamal12
+iamal12 
+commented 6 months ago
+update to latest version of npm, just run the command
+npm install npm@latest -g
+
+@chiheon
+chiheon 
+commented about 2 months ago
+node.js : 10.9.0
+rand-token : 0.4.0
+I can solve this problem by change the code named "index.js" in "email-verification"
+( "email-verification" is located in node_modules )
+please change the code
+
+var options = { ~~~}; and var transporter; upto "module.exports = ~~~"
+
+Comment on issue
+Sign in to comment or sign up to join this conversation on GitHub
+ Desktop version

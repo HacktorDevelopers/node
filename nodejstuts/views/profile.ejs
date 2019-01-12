@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Profile | <%= data.name %></title>
+	<link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+	<% include partials/nav.ejs %>
+	<h1>Welcome to the profile of <%= data.name  %></h1>
+	<p><strong>Name: </strong><%= data.name %></p>
+	<p><strong>Age: </strong><%= data.age %></p>
+	<p><strong>Job: </strong><%= data.job %></p>
+	<h2>Hobbies</h2>
+	<ul>
+	<% data.hobbies.forEach(function(item){ %>
+		<li><%= item %></li>
+	<% }) %>
+	</ul>
+
+	<div class="tab-container">
+		<button class="button tabs">Login</button>
+		<button class="button tabs">Register</button>
+	</div>
+</body>
+</html>

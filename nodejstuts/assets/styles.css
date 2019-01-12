@@ -1,0 +1,54 @@
+		* {
+			list-style-type: none;
+			text-decoration: none;
+		}
+		body {
+			color: #fff;
+			background-color: skyblue;
+			font-family: verdana;
+			padding: 30px;
+		}
+
+		p {
+			font-size:26px;
+			text-align: center;
+			color: navy;
+			font-family: fantasy;
+		}
+		
+		h1 {
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			font-size: 48px;
+			text-align: center;
+		}
+
+		.tab-container,.tabs{
+			display: inline;
+		}
+
+		.button {
+			margin: 10px;
+			padding: 5px;
+			border-radius: 5px;
+			border: 1px solid #fff;
+			background: transparent;
+		}
+
+		#contact-form, input{
+			padding: 5px;
+			display: block;
+			border: 1px solid #fff;
+			border-radius: 5px;
+		}
+
+		input[type=text] {
+			margin: 5px;
+			border:0px;
+			background:transparent;
+			outline: 0px;
+		}
+
+		input[type=text]:focus{
+			border-bottom: 1px solid #feaba0;
+		}
